@@ -13,6 +13,7 @@ public class TwoIntegerSumIITest {
     int target = 3;
     Assertions.assertArrayEquals(output, twoIntegerSumII.twoSum2Pointers1(numbers, target));
     Assertions.assertArrayEquals(output, twoIntegerSumII.twoSum2Pointers2(numbers, target));
+    Assertions.assertArrayEquals(output, twoIntegerSumII.twoSumBinarySearch(numbers, target));
   }
   
 }
