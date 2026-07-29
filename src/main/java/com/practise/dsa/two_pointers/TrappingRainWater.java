@@ -17,23 +17,23 @@ public class TrappingRainWater {
     int trappedWater = 0;
     
     while (left<right) {
-      System.out.println("left index=" + left + ", left height=" + height[left] + ". right index=" + right + ", right height=" + height[right]);      
-      System.out.println("maxLeft=" + maxLeft + ", maxRight=" + maxRight);      
-      System.out.println("trappedWater=" + trappedWater);      
+      System.out.printf("left index=%d, left height=%d. right index=%d, right height=%d%n", left, height[left], right, height[right]);
+      System.out.printf("maxLeft=%d, maxRight=%d%n", maxLeft, maxRight);      
+      System.out.printf("trappedWater=%d%n", trappedWater);      
       
       maxLeft = Math.max(maxLeft, height[left]);
       if (maxLeft > height[left]) {
-        System.out.println("maxLeft updated to " + maxLeft + ". Adding " + (maxLeft-height[left]) + " units of water");
+        System.out.printf("maxLeft updated to=%d. Adding %d units of water%n", maxLeft, maxLeft-height[left]);
         trappedWater = trappedWater + (maxLeft - height[left]);
-        System.err.println("trappedWater=" + trappedWater);
+        System.out.printf("trappedWater=%d%n", trappedWater);
       }
       
       
       maxRight = Math.max(maxRight, height[right]);
       if (maxRight > height[right]) {
-        System.out.println("maxRight updated to " + maxRight + ". Adding " + (maxRight-height[right]) + " units of water");
+        System.out.printf("maxRight updated to=%d. Adding %d to units of water", maxRight, maxRight-height[right]);
         trappedWater = trappedWater + (maxRight - height[right]);
-        System.err.println("trappedWater=" + trappedWater);
+        System.out.println("trappedWater=" + trappedWater);
       }
       
       if (height[left] <= height[right]) {
