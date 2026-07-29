@@ -10,6 +10,7 @@ public class TrappingRainWaterTest {
   @Test
   void testTrappingRainWater() {
     int[] height = new int[] {0,2,0,3,1,0,1,3,2,1};
-    Assertions.assertEquals(9, trappingRainWater.trap(height));
+    Assertions.assertEquals(9, trappingRainWater.trapLeftAndRightArrays(height));
+    Assertions.assertEquals(9, trappingRainWater.trap2Pointers(height));
   }
 }
