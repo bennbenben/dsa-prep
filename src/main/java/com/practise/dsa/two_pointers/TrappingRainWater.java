@@ -3,8 +3,57 @@ package com.practise.dsa.two_pointers;
 import java.util.Arrays;
 
 public class TrappingRainWater {
+  
+  /**
+   * 2 Pointers solution
+   * Time complexity: O(N) as there is a single traversal linearly
+   * Space complexity: O(1) as it only store pointers
+   * @param height
+   * @return
+   */
+  public int trap2Pointers(int[] height) {
+    int left=0, right = height.length-1;
+    int maxLeft=0, maxRight=0;
+    int trappedWater = 0;
+    
+    while (left<right) {
+      System.out.println("left index=" + left + ", left height=" + height[left] + ". right index=" + right + ", right height=" + height[right]);      
+      System.out.println("maxLeft=" + maxLeft + ", maxRight=" + maxRight);      
+      System.out.println("trappedWater=" + trappedWater);      
+      
+      maxLeft = Math.max(maxLeft, height[left]);
+      if (maxLeft > height[left]) {
+        System.out.println("maxLeft updated to " + maxLeft + ". Adding " + (maxLeft-height[left]) + " units of water");
+        trappedWater = trappedWater + (maxLeft - height[left]);
+        System.err.println("trappedWater=" + trappedWater);
+      }
+      
+      
+      maxRight = Math.max(maxRight, height[right]);
+      if (maxRight > height[right]) {
+        System.out.println("maxRight updated to " + maxRight + ". Adding " + (maxRight-height[right]) + " units of water");
+        trappedWater = trappedWater + (maxRight - height[right]);
+        System.err.println("trappedWater=" + trappedWater);
+      }
+      
+      if (height[left] <= height[right]) {
+        left += 1;
+      } else if (height[left] > height[right]) {
+        right -= 1;
+      }
+    }
+    
+    return trappedWater;
+  }
 
-  public int trap(int[] height) {
+  /**
+   * Left and right arrays
+   * Time complexity: O(N) as there is only linear traversal, including to build up the left and right arrays
+   * Space complexity: O(N) as the left and right array scales linearly with length of the input array height
+   * @param height
+   * @return
+   */
+  public int trapLeftAndRightArrays(int[] height) {
     int heightLength = height.length; // 10
     int[] leftPeaks = new int[height.length];
     int[] rightPeaks = new int[height.length];
@@ -35,6 +84,6 @@ public class TrappingRainWater {
   
   public static void main(String[] args) {
     TrappingRainWater trappingRainWater = new TrappingRainWater();
-    trappingRainWater.trap(new int[] {0,2,0,3,1,0,1,3,2,1});
+    trappingRainWater.trap2Pointers(new int[] {0,2,0,3,1,0,1,3,2,1});
   }
 }
