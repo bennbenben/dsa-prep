@@ -6,52 +6,55 @@ import java.util.Map;
 public class LongestRepeatingCharacterReplacement {
   
   public int characterReplacement(String s, int k) {
-    
+    char[] inputArray = s.toCharArray();
     int slowPointer=0, fastPointer=1;
-    char[] sCharArray = s.toCharArray();
-    Map<Character, Integer> charFrequency = new HashMap<Character, Integer>();
     
-    charFrequency.put(sCharArray[slowPointer], 1);
-    int maxWindowSize = 1;
+    Map<Character,Integer> frequencyMap = new HashMap<Character,Integer>();
+    frequencyMap.put(inputArray[slowPointer], 1);
     
-    while (fastPointer < sCharArray.length) {
-      int fastPointerFrequency = charFrequency.getOrDefault(sCharArray[fastPointer], 0)+1;
-      charFrequency.put(sCharArray[fastPointer], fastPointerFrequency);
+    int highestFrequency = 1, totalFrequencies = 1, numsOfReplacementsRequired = 0;
+    
+    while (fastPointer < inputArray.length) {
+      System.out.printf("Existing slowPointer=%d, value=%s%n", slowPointer, inputArray[slowPointer]);
+      System.out.printf("Existing fastPointer=%d, value=%s%n", fastPointer, inputArray[fastPointer]);
       
-      Character mostFrequentCharacter = null;
-      Integer mostFrequentCharacterFrequency = 0;
-      for (Map.Entry<Character, Integer> entry : charFrequency.entrySet()) {
-        if (entry.getValue() > mostFrequentCharacterFrequency) {
-          mostFrequentCharacter = entry.getKey();
-          mostFrequentCharacterFrequency = entry.getValue();
+      int fastPointerFrequency = frequencyMap.getOrDefault(inputArray[fastPointer],0)+1;
+      frequencyMap.put(inputArray[fastPointer], fastPointerFrequency);
+      System.out.printf("frequencyMap=%s%n", frequencyMap.toString());
+      
+      totalFrequencies = 0;
+      for (Map.Entry<Character, Integer> entry : frequencyMap.entrySet()) {
+        totalFrequencies += entry.getValue();
+        if (entry.getValue() > highestFrequency) {
+          highestFrequency = entry.getValue();
         }
       }
       
-      int windowSize = fastPointer - slowPointer + 1;
-      int numberOfImposters = windowSize - mostFrequentCharacterFrequency;
+      numsOfReplacementsRequired = totalFrequencies - highestFrequency;
+      System.out.printf("numOfReplacements=%s%n", numsOfReplacementsRequired);
       
-      while (numberOfImposters > k) {
-        charFrequency.put(sCharArray[slowPointer], charFrequency.get(sCharArray[slowPointer])-1);
-        slowPointer += 1;
+      while (numsOfReplacementsRequired>k) {
+        System.out.printf("(numsOfReplacementsRequired=%d) > (k=%d)%n", numsOfReplacementsRequired, k);
+        int slowPointerFrequency = frequencyMap.get(inputArray[slowPointer])-1;
+        frequencyMap.put(inputArray[slowPointer], slowPointerFrequency);
+        slowPointer +=1;
         
-        mostFrequentCharacter = null;
-        mostFrequentCharacterFrequency = 0;
-        for (Map.Entry<Character, Integer> entry : charFrequency.entrySet()) {
-          if (entry.getValue() > mostFrequentCharacterFrequency) {
-            mostFrequentCharacter = entry.getKey();
-            mostFrequentCharacterFrequency = entry.getValue();
+        totalFrequencies = 0;
+        for (Map.Entry<Character, Integer> entry : frequencyMap.entrySet()) {
+          totalFrequencies += entry.getValue();
+          if (entry.getValue() > highestFrequency) {
+            highestFrequency = entry.getValue();
           }
         }
         
-        windowSize = fastPointer - slowPointer + 1;
-        numberOfImposters = windowSize - mostFrequentCharacterFrequency;
+        numsOfReplacementsRequired = totalFrequencies - highestFrequency;
+        System.out.printf("numOfReplacements=%s%n", numsOfReplacementsRequired);
       }
       
-      maxWindowSize = Math.max(maxWindowSize, windowSize);
-      fastPointer +=1;
+      fastPointer+=1;
     }
     
-    return maxWindowSize;
-    
+    System.out.printf("totalFrequencies=%d%n", totalFrequencies);
+    return totalFrequencies;
   }
 }
