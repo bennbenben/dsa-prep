@@ -5,7 +5,19 @@ import java.util.Map;
 
 public class PermutationInString {
   
+  /**
+   * Fixed window frame
+   * Time complexity: O(M+N), where M is the length of S1, and N is the length of S2 (but N>>M)
+   * Space Complexity: O(N), where N is the length of S2
+   * @param s1
+   * @param s2
+   * @return
+   */
   public boolean checkInclusion(String s1, String s2) {
+    
+    if (s1.length() > s2.length()) {
+      return false;
+    }
     
     char[] s1CharArray = s1.toCharArray();
     Map<Character, Integer> s1FrequencyMap = new HashMap<>();
@@ -64,10 +76,4 @@ public class PermutationInString {
     return false;
   }
   
-  
-  public static void main(String[] args) {
-    PermutationInString solver = new PermutationInString();
-    boolean output = solver.checkInclusion("abc", "lecaabee");
-    System.out.println("output=" + output);
-  }
 }
