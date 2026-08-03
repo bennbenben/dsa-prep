@@ -13,6 +13,7 @@ public class SlidingWindowMaximumTest {
     int k = 3;
     int[] output = {2,2,4,4,6};
     Assertions.assertArrayEquals(output, slidingWindowMaximum.maxSlidingWindowBruteForce(nums, k));
-    Assertions.assertArrayEquals(output, slidingWindowMaximum.maxSlidingWindowMaxHeap(nums, k));
+    Assertions.assertArrayEquals(output, slidingWindowMaximum.maxSlidingWindowPriorityQueue(nums, k));
+    Assertions.assertArrayEquals(output, slidingWindowMaximum.maxSlidingWindowDeque(nums, k));
   }
 }

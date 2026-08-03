@@ -2,6 +2,7 @@ package com.practise.dsa.sliding_window;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -49,7 +50,7 @@ public class SlidingWindowMaximum {
    * @param k
    * @return
    */
-  public int[] maxSlidingWindowMaxHeap(int[] nums, int k) {
+  public int[] maxSlidingWindowPriorityQueue(int[] nums, int k) {
     PriorityQueue<int[]> maxHeap = new PriorityQueue<int[]>((a,b) -> b[0]-a[0]);
     for (int i=0; i<k; i++) {
       maxHeap.offer(new int[] {nums[i], i});
@@ -80,9 +81,47 @@ public class SlidingWindowMaximum {
     return maxWindowArray;
   }
   
+  public int[] maxSlidingWindowDeque(int[] nums, int k) {
+    LinkedList<Integer> windowDeque = new LinkedList<Integer>();
+    
+    List<Integer> maxWindows = new ArrayList<Integer>();
+    int slowPointer=0, fastPointer=0;
+    
+    while (fastPointer<nums.length) {
+      while ((windowDeque.size()>0) && (windowDeque.peekFirst() < slowPointer)) {
+        windowDeque.pollFirst();
+      }
+      
+      while ((windowDeque.size()>0) && (nums[fastPointer] > nums[windowDeque.peekLast()])) {
+        windowDeque.pollLast();
+      }
+      
+      windowDeque.addLast(fastPointer);
+      
+      if (fastPointer >= k-1) {
+        maxWindows.add(nums[windowDeque.peekFirst()]);
+      }
+      
+      int existingWindowSize = fastPointer - slowPointer + 1;
+      if (existingWindowSize < k) {
+        fastPointer +=1;
+      } else { 
+        slowPointer +=1;
+        fastPointer +=1;
+      }
+    }
+    
+    int[] maxWindowArray = new int[maxWindows.size()];
+    for (int i=0; i<maxWindows.size(); i++) {
+      maxWindowArray[i]=maxWindows.get(i);
+    }
+    return maxWindowArray;
+  }
+  
   public static void main(String[] args) {
     SlidingWindowMaximum slidingWindowMaximum = new SlidingWindowMaximum();
     slidingWindowMaximum.maxSlidingWindowBruteForce(new int[] {10, 1, 2, 3}, 3);
-    slidingWindowMaximum.maxSlidingWindowMaxHeap(new int[] {10, 1, 2, 3}, 3);
+    slidingWindowMaximum.maxSlidingWindowPriorityQueue(new int[] {10, 1, 2, 3}, 3);
+    slidingWindowMaximum.maxSlidingWindowDeque(new int[] {10, 1, 2, 3}, 3);
   }
 }
