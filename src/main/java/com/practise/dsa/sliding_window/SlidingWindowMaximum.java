@@ -81,6 +81,14 @@ public class SlidingWindowMaximum {
     return maxWindowArray;
   }
   
+  /**
+   * Sliding window with Deque (LinkedList)
+   * Time complexity: O(N) as the input array nums is only iterated once. Every element of input array nums is being added to the deque once, and removed exactly once 
+   * Space Complexity: O(N) as the size of the windowDeque will grow to at most size k, however, the result array will take same as number of windows which is O(length(nums)-K+1) => O(N) 
+   * @param nums
+   * @param k
+   * @return
+   */
   public int[] maxSlidingWindowDeque(int[] nums, int k) {
     LinkedList<Integer> windowDeque = new LinkedList<Integer>();
     
