@@ -15,13 +15,22 @@ public class ValidAnagram {
    * @return
    */
   public boolean isAnagramSorted(String s, String t) {
-    char[] sCharArr = s.toCharArray();
-    Arrays.sort(sCharArr);
+    if (s.length()!=t.length()) {
+      return false;
+    }
     
-    char[] tCharArr = t.toCharArray();
-    Arrays.sort(tCharArr);
+    char[] sCharArray = s.toCharArray();
+    Arrays.sort(sCharArray);
     
-    return Arrays.equals(sCharArr, tCharArr);
+    char[] tCharArray = t.toCharArray();
+    Arrays.sort(tCharArray);
+    
+    for (int i=0; i<s.length(); i++) {
+      if (sCharArray[i] != tCharArray[i]) {
+        return false;
+      }
+    }
+    return true;
   }
   
   /**
@@ -33,20 +42,19 @@ public class ValidAnagram {
    * @return
    */
   public boolean isAnagramHashMap(String s, String t) {
-    
-    if (s.length() != t.length()) {
+    if (s.length()!=t.length()) {
       return false;
-  }
-    
-    Map<Character, Integer> sMap = new HashMap<>();
-    Map<Character, Integer> tMap = new HashMap<>();
-    
-    for (int i=0; i < s.length() ;i++) {
-      sMap.put(s.charAt(i), sMap.getOrDefault(s.charAt(i), 0) + 1);
-      tMap.put(t.charAt(i), tMap.getOrDefault(t.charAt(i), 0) + 1);
     }
     
-    return sMap.equals(tMap);
+    Map<Character, Integer> sFreqMap = new HashMap<Character, Integer>();
+    Map<Character, Integer> tFreqMap = new HashMap<Character, Integer>();
+    
+    for (int i=0; i<s.length(); i++) {
+      sFreqMap.put(s.charAt(i), sFreqMap.getOrDefault(s.charAt(i), 0) + 1);
+      tFreqMap.put(t.charAt(i), tFreqMap.getOrDefault(t.charAt(i), 0) + 1);
+    }
+    
+    return sFreqMap.equals(tFreqMap);
   }
   
   /**
@@ -58,23 +66,19 @@ public class ValidAnagram {
    * @return
    */
   public boolean isAnagramPrimitiveArray(String s, String t) {
-    if (s.length() != t.length()) {
+    if (s.length()!=t.length()) {
       return false;
     }
-    
-    int[] charFrequencies = new int[26];
-    
+    int[] freqHashTable = new int[26];
     for (int i=0; i<s.length(); i++) {
-      charFrequencies[s.charAt(i) - 'a'] += 1;
-      charFrequencies[t.charAt(i) - 'a'] -= 1;
+      freqHashTable[s.charAt(i) - 'a'] += 1;
+      freqHashTable[t.charAt(i) - 'a'] -= 1;
     }
-    
-    for (int charFrequency : charFrequencies) {
-      if (charFrequency != 0) {
+    for (int i=0; i<freqHashTable.length; i++) {
+      if (freqHashTable[i] != 0) {
         return false;
       }
     }
-    
     return true;
   }
 

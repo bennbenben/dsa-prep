@@ -18,8 +18,8 @@ public class ContainsDuplicate {
    */
   public boolean hasDuplicateSorting(int[] nums) {
     Arrays.sort(nums);
-    for ( int i=0; i < nums.length-1; i++ ) {
-      if (nums[i] == nums[i+1]) {
+    for (int i=1; i<nums.length; i++) {
+      if (nums[i] == nums[i-1]) {
         return true;
       }
     }
@@ -34,12 +34,13 @@ public class ContainsDuplicate {
    * @return
    */
   public boolean hasDuplicateHashSet(int[] nums) {
-    Set<Integer> seen = new HashSet();
+    Set<Integer> duplicatesSet = new HashSet<Integer>();
     for (int num : nums) {
-      if (seen.contains(num)) {
+      if (duplicatesSet.contains(num)) {
         return true;
+      } else {
+        duplicatesSet.add(num);
       }
-      seen.add(num);
     }
     return false;
   }
