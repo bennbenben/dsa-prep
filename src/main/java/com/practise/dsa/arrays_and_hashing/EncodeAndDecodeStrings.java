@@ -4,31 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EncodeAndDecodeStrings {
-
   public String encode(List<String> strs) {
-    StringBuilder stringBuilder = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
     for (String str : strs) {
-      stringBuilder.append(str.length());
-      stringBuilder.append("#");
-      stringBuilder.append(str);
+      sb.append(str.length())
+        .append('#')
+        .append(str);
     }
-    return stringBuilder.toString();
+    return sb.toString();
   }
 
   public List<String> decode(String str) {
-    int i = 0, hexIndex = 0;
-    List<String> result = new ArrayList<String>();
-
-    // 3#abc5#abcde
-    while (i < str.length()) {
-      hexIndex = str.indexOf('#', i); // hexIndex=1
-      int wordLength = Integer.valueOf(str.substring(i, hexIndex)); // wordLength=3
-      String word = str.substring(hexIndex + 1, hexIndex + 1 + wordLength); // word = str.substring(1+1, 1+1+3)
-      result.add(word);
-      i = hexIndex + 1 + wordLength;
+    List<String> decodedString = new ArrayList<String>();
+    int i=0;
+    while (i<str.length()) {
+      int hashIndex = str.indexOf('#', i);
+      int wordLength = Integer.valueOf(str.substring(i, hashIndex));
+      String word = str.substring(hashIndex+1, hashIndex+1+wordLength);
+      decodedString.add(word);
+      i = hashIndex+1+wordLength;
     }
-
-    return result;
+    return decodedString;
   }
-
 }

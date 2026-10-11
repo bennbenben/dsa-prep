@@ -18,24 +18,20 @@ public class TwoSum {
   public int[] twoSum2Pointers(int[] nums, int target) {
     int[][] numsCopy = new int[nums.length][2];
     for (int i=0; i<nums.length; i++) {
-      numsCopy[i][0]= nums[i];
-      numsCopy[i][1]= i;
+      numsCopy[i][0] = nums[i];
+      numsCopy[i][1] = i;
     }
+    Arrays.sort(numsCopy, Comparator.comparingInt(value -> value[0]));
     
-    Arrays.sort(numsCopy, Comparator.comparingInt(valueIndex -> valueIndex[0]));
-    
-    int i=0, j=nums.length-1;
-    while (i<j) {
-      int sum = numsCopy[i][0] + numsCopy[j][0];
-      
-      if (sum == target) {
-        return new int[] {numsCopy[i][1], numsCopy[j][1]};
-      }
-      
-      if (sum < target) {
-        i += 1;
+    int left = 0, right = numsCopy.length-1;
+    while (left < right) {
+      int currentSum = numsCopy[left][0] + numsCopy[right][0];
+      if (currentSum < target) {
+        left += 1;
+      } else if (currentSum > target) {
+        right -= 1;
       } else {
-        j -= 1;
+        return new int[] {numsCopy[left][1], numsCopy[right][1]}; 
       }
     }
     return null;
@@ -44,18 +40,16 @@ public class TwoSum {
   public int[] twoSumHashMapTwoPass(int[] nums, int target) {
     Map<Integer, Integer> numsMap = new HashMap<Integer, Integer>();
     
-    for (int i=0; i<nums.length; i++) {
+    for (int i=0; i < nums.length; i++) {
       numsMap.put(nums[i], i);
     }
     
-    int diff;
-    for (int i=0; i<nums.length; i++) {
-      diff = target - nums[i];
-      if (numsMap.containsKey(diff) && numsMap.get(diff) != i) {
+    for (int i=0; i < nums.length; i++) {
+      int diff = target - nums[i];
+      if (numsMap.containsKey(diff) && i != numsMap.get(diff)) {
         return new int[] {i, numsMap.get(diff)};
       }
     }
-    
     return null;
   }
   
@@ -71,14 +65,13 @@ public class TwoSum {
     Map<Integer, Integer> complementMap = new HashMap<Integer, Integer>();
     
     for (int i=0; i<nums.length; i++) {
-      Integer complement = target - nums[i];
-      if (complementMap.containsKey(complement)) {
-        return new int[] {complementMap.get(complement), i};
+      int diff = target - nums[i];
+      if (complementMap.containsKey(diff)) {
+        return new int[] {complementMap.get(diff), i};
       } else {
-        complementMap.put(nums[i], i);  
+        complementMap.put(nums[i], i);
       }
     }
-    
     return null;
   }
 }
