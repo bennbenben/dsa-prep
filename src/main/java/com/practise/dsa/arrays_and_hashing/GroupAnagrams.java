@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GroupAnagrams {
-
+  
   /**
    * Hash Map with sorted keys Time complexity: O(N log N * M), where M is the
    * number of strings and N is the length of the longest string Space complexity:
@@ -17,51 +17,50 @@ public class GroupAnagrams {
    * @return
    */
   public List<List<String>> groupAnagramsSorting(String[] strs) {
-
-    Map<String, List<String>> anagramGroup = new HashMap<String, List<String>>();
-
+    Map<String, List<String>> anagramMap = new HashMap<String, List<String>>();
+    
     for (String str : strs) {
-      char[] chars = str.toCharArray();
-      Arrays.sort(chars);
-      String key = new String(chars);
-
-      List<String> existingValues = anagramGroup.get(key);
-      if (existingValues == null) {
-        existingValues = new ArrayList<String>();
-        anagramGroup.put(key, existingValues);
+      char[] charArray = str.toCharArray();
+      Arrays.sort(charArray);
+      String sortedStr = String.valueOf(charArray);
+      
+      if (anagramMap.containsKey(sortedStr)) {
+        anagramMap.get(sortedStr).add(str);
+      } else {
+        anagramMap.put(sortedStr, new ArrayList<String>());
+        anagramMap.get(sortedStr).add(str);
       }
-
-      existingValues.add(str);
     }
-
-    return new ArrayList<List<String>>(anagramGroup.values());
-
+    
+    List<List<String>> groupAnagram = new ArrayList<List<String>>();
+    groupAnagram.addAll(anagramMap.values());
+    return groupAnagram;
   }
 
+  
   public List<List<String>> groupAnagramsHashTable(String[] strs) {
-
-    Map<String, List<String>> anagramGroup = new HashMap<String, List<String>>();
-
+    Map<String, List<String>> anagramMap = new HashMap<String, List<String>>();
     for (String str : strs) {
       int[] alphabetsFrequency = new int[26];
       char[] chars = str.toCharArray();
-
+      
       for (char c : chars) {
         int alphabet = c - 'a';
         alphabetsFrequency[alphabet] += 1;
       }
-
+      
       String key = Arrays.toString(alphabetsFrequency);
-      List<String> existingValue = anagramGroup.get(key);
-      if (existingValue == null) {
-        existingValue = new ArrayList<String>();
-        anagramGroup.put(key, existingValue);
+      if (anagramMap.containsKey(key)) {
+        anagramMap.get(key).add(str);
+      } else {
+        anagramMap.put(key, new ArrayList<String>());
+        anagramMap.get(key).add(str);
       }
-      existingValue.add(str);
-
     }
     
-    return new ArrayList<List<String>>(anagramGroup.values());
+    List<List<String>> groupAnagram = new ArrayList<List<String>>();
+    groupAnagram.addAll(anagramMap.values());
+    return groupAnagram;
   }
 
 }
