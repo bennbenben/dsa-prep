@@ -8,42 +8,34 @@ public class ThreeSum {
   
   public List<List<Integer>> threeSum(int[] nums) {
     Arrays.sort(nums);
-    int i,j,k;
-    List<List<Integer>> result = new ArrayList<List<Integer>>();
+    List<List<Integer>> threeSumResultList = new ArrayList<List<Integer>>();
     
-    for (i=0; i<nums.length-2; i++) {
-      if (i > 0 && (nums[i-1] == nums[i])) {
-//        System.out.println("Skipping outer duplicate for value: " + nums[i]);
+    for (int i=0; i<nums.length-2;i++) {
+      if (i > 0 && nums[i] == nums[i-1]) {
         continue;
       }
       
-      j = i+1;
-      k = nums.length-1;
-      
-      while (j<k) {
-        int threeSum = nums[i] + nums[j] + nums[k];
-//        System.out.println(String.format("Evaluating pointers: i=%d, j=%d, k=%d | Sum: %d + %d + %d = %d", 
-//            i, j, k, nums[i], nums[j], nums[k], threeSum));
-        
+      int left = i+1, right = nums.length-1;
+      while (left < right) {
+        int threeSum = nums[i] + nums[left] + nums[right];
         if (threeSum < 0) {
-          j+=1;
+          left += 1;
+          continue;
         } else if (threeSum > 0) {
-          k -= 1;
+          right -= 1;
+          continue;
         } else {
-//          System.out.println("Match found, adding to result");
-          result.add(new ArrayList<Integer>(Arrays.asList(nums[i],nums[j],nums[k])));
-          j += 1;
-          k -= 1;
+          threeSumResultList.add(Arrays.asList(nums[i], nums[left], nums[right]));
+          left += 1;
+          right -= 1;
           
-          while (j < k && (nums[j] == nums[j-1])) {
-            j+=1;
+          while (left < right && nums[left] == nums[left-1]) {
+            left += 1;
           }
-          
         }
       }
-      
     }
-    return result;
+    return threeSumResultList;
   }
   
 }

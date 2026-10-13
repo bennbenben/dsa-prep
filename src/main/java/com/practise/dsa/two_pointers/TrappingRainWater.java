@@ -1,8 +1,44 @@
 package com.practise.dsa.two_pointers;
 
-import java.util.Arrays;
-
 public class TrappingRainWater {
+  
+  /**
+   * Left and right arrays
+   * Time complexity: O(N) as there is only linear traversal, including to build up the left and right arrays
+   * Space complexity: O(N) as the left and right array scales linearly with length of the input array height
+   * @param height
+   * @return
+   */
+  public int trapLeftAndRightArrays(int[] height) {
+    int[] leftArray = new int[height.length];
+    int[] rightArray = new int[height.length];
+    
+    leftArray[0] = height[0];
+    rightArray[height.length-1] = height[height.length-1];
+    
+    for (int i=1; i<=height.length-1; i++) {
+      if (height[i] > leftArray[i-1]) {
+        leftArray[i] = height[i];
+      } else {
+        leftArray[i] = leftArray[i-1];
+      }
+    }
+    
+    for (int i=height.length-2; i>=0; i--) {
+      if (height[i] > rightArray[i+1]) {
+        rightArray[i] = height[i];
+      } else {
+        rightArray[i] = rightArray[i+1];
+      }
+    }
+    
+    int trappedWater = 0;
+    for (int i=0; i<=height.length-1; i++) {
+      trappedWater += Math.min(leftArray[i], rightArray[i]) - height[i];
+    }
+    
+    return trappedWater;
+  }
   
   /**
    * 2 Pointers solution
@@ -12,33 +48,18 @@ public class TrappingRainWater {
    * @return
    */
   public int trap2Pointers(int[] height) {
-    int left=0, right = height.length-1;
-    int maxLeft=0, maxRight=0;
-    int trappedWater = 0;
+    int left=0, right=height.length-1;
+    int leftMax=0, rightMax=0;
+    int trappedWater=0;
     
-    while (left<right) {
-      System.out.printf("left index=%d, left height=%d. right index=%d, right height=%d%n", left, height[left], right, height[right]);
-      System.out.printf("maxLeft=%d, maxRight=%d%n", maxLeft, maxRight);      
-      System.out.printf("trappedWater=%d%n", trappedWater);      
-      
-      maxLeft = Math.max(maxLeft, height[left]);
-      if (maxLeft > height[left]) {
-        System.out.printf("maxLeft updated to=%d. Adding %d units of water%n", maxLeft, maxLeft-height[left]);
-        trappedWater = trappedWater + (maxLeft - height[left]);
-        System.out.printf("trappedWater=%d%n", trappedWater);
-      }
-      
-      
-      maxRight = Math.max(maxRight, height[right]);
-      if (maxRight > height[right]) {
-        System.out.printf("maxRight updated to=%d. Adding %d to units of water", maxRight, maxRight-height[right]);
-        trappedWater = trappedWater + (maxRight - height[right]);
-        System.out.println("trappedWater=" + trappedWater);
-      }
-      
+    while (left < right) {
       if (height[left] <= height[right]) {
+        leftMax = Math.max(leftMax, height[left]);
+        trappedWater += leftMax - height[left];
         left += 1;
-      } else if (height[left] > height[right]) {
+      } else {
+        rightMax = Math.max(rightMax, height[right]);
+        trappedWater += rightMax - height[right];
         right -= 1;
       }
     }
@@ -46,39 +67,4 @@ public class TrappingRainWater {
     return trappedWater;
   }
 
-  /**
-   * Left and right arrays
-   * Time complexity: O(N) as there is only linear traversal, including to build up the left and right arrays
-   * Space complexity: O(N) as the left and right array scales linearly with length of the input array height
-   * @param height
-   * @return
-   */
-  public int trapLeftAndRightArrays(int[] height) {
-    int heightLength = height.length; // 10
-    int[] leftPeaks = new int[height.length];
-    int[] rightPeaks = new int[height.length];
-    
-    for (int i=1; i<=heightLength-1;i++) { // iteration - index 9 needs to be included
-      leftPeaks[i] = Math.max(leftPeaks[i-1], height[i-1]); // index 1
-      rightPeaks[heightLength-1-i] = Math.max(rightPeaks[heightLength-i], height[heightLength-i]); // index 8
-      
-    }
-    
-    System.out.println("height=" + Arrays.toString(height));
-    System.out.println("leftPeaks=" + Arrays.toString(leftPeaks));
-    System.out.println("rightPeaks=" + Arrays.toString(rightPeaks));
-    
-    int shortestPeak, unitsOfWater = 0;
-    for (int i=0; i<heightLength; i++) {
-      shortestPeak = Math.min(leftPeaks[i], rightPeaks[i]);
-      System.out.println("inside index=" + i + ", shortestPeak=" + shortestPeak + ", height=" + height[i]);
-      if (shortestPeak > height[i]) {
-        unitsOfWater += (shortestPeak - height[i]);
-        System.out.println("unitsOfWater=" + unitsOfWater);
-      }
-    }
-    
-    return unitsOfWater;
-  }
-  
 }
