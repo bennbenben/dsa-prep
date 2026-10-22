@@ -17,86 +17,114 @@ public class MinimumWindowSubstring {
    * @return
    */
   public String minWindow(String s, String t) {
-    // edge case
-    if (t.length()>s.length())
-      return "";
-    
-    // s=OUZODYXAZV, t=XYZ
-    System.out.printf("Input string s=%s, string t=%s%n", s, t);
-    Map<Character,Integer> tFreqMap = new HashMap<Character,Integer>();
-    Map<Character,Integer> sFreqMap = new HashMap<Character,Integer>();
+    Map<Character, Integer> tFreqMap = new HashMap<Character, Integer>();
     for (int i=0; i<t.length(); i++) {
       tFreqMap.put(t.charAt(i), tFreqMap.getOrDefault(t.charAt(i), 0)+1);
-      sFreqMap.put(s.charAt(i), sFreqMap.getOrDefault(s.charAt(i), 0)+1);
     }
-    System.out.printf("tFreqMap=%s%n", tFreqMap.toString());
-    System.out.printf("sFreqMap=%s%n", sFreqMap.toString());
     
-    int slowPointer=0, fastPointer=t.length()-1;
-    int minSlowPointer=0, minFastPointer=Integer.MAX_VALUE;
-    int lengthOfMinSubString = Integer.MAX_VALUE;
-    
-    while (slowPointer < s.length()) {
-      System.out.printf("slowPointer=%d, fastPointer=%d%n", slowPointer, fastPointer);
+    Map<Character, Integer> sFreqMap = new HashMap<Character, Integer>();
+    int slowPointer=0, fastPointer=0;
+    int minWindowLength=Integer.MAX_VALUE, minStart=0, minEnd=0;
+    while (fastPointer < s.length()) {
+      int fastPointerValue = sFreqMap.getOrDefault(s.charAt(fastPointer), 0)+1;
+      sFreqMap.put(s.charAt(fastPointer), fastPointerValue);
       
-      // introduce checking condition on the frequency maps
-      while (this.frequencyMapEqualsOrMore(sFreqMap, tFreqMap)) {
-        System.out.printf("sFreqMap=%s equals tFreqMap=%s%n", sFreqMap.toString(), tFreqMap.toString());
-        
-        int lengthOfThisSubString = fastPointer - slowPointer + 1;
-        if (lengthOfThisSubString < lengthOfMinSubString) {
-          minSlowPointer = slowPointer; minFastPointer = fastPointer; 
-          lengthOfMinSubString = lengthOfThisSubString;
+      // valid or not - if valid, shrink slowpointer. if not valid, add fastpointer
+      while (this.freqMapEqualsOrMore(sFreqMap, tFreqMap)) {
+        int windowLength = fastPointer - slowPointer +1;
+        if (windowLength < minWindowLength) {
+          minStart = slowPointer; minEnd = fastPointer;
+          minWindowLength = windowLength;
         }
         
-        // start shrinking the minimum window. increment slowPointer and update sFreqMap
-        Character slowPointerValue = s.charAt(slowPointer);
-        int newSlowPointerValueFreq = sFreqMap.get(slowPointerValue)-1;
-        if (newSlowPointerValueFreq == 0) {
-          sFreqMap.remove(slowPointerValue);
+        int slowPointerValue = sFreqMap.get(s.charAt(slowPointer))-1;
+        if (slowPointerValue == 0) {
+          sFreqMap.remove(s.charAt(slowPointer));
         } else {
-          sFreqMap.put(slowPointerValue, newSlowPointerValueFreq);
+          sFreqMap.put(s.charAt(slowPointer), slowPointerValue);
         }
-        slowPointer += 1;
+        slowPointer+=1;
       }
-      System.out.printf("sFreqMap=%s NOT equals tFreqMap=%s%n", sFreqMap.toString(), tFreqMap.toString());
-      
-      // increment the fastPointer and update sFreqMap
-      fastPointer +=1;
-      if (fastPointer < s.length()) {
-        sFreqMap.put(s.charAt(fastPointer), sFreqMap.getOrDefault(s.charAt(fastPointer),0)+1);
-      } else {
-        break;
-      }
+
+      fastPointer += 1;
     }
     
-    System.out.printf("Identifed minSlowPointer=%d, minFastPointer=%d%n%n", minSlowPointer, minFastPointer);
-    
-    if (lengthOfMinSubString == Integer.MAX_VALUE) {
+    if (minWindowLength==Integer.MAX_VALUE) {
       return "";
     } else {
-      StringBuilder sb = new StringBuilder();
-      while (minSlowPointer <= minFastPointer) {
-        sb.append(s.charAt(minSlowPointer));
-        minSlowPointer++;
-      }
-      System.out.println("sb.toString()=" + sb.toString());
-      return sb.toString();
+      return s.substring(minStart, minEnd+1);
     }
   }
   
-  private boolean frequencyMapEqualsOrMore(Map<Character,Integer> sFreqMap, Map<Character,Integer> tFreqMap) {
-    for (Map.Entry<Character,Integer>entry:tFreqMap.entrySet()) {
-      Character tMapKey = entry.getKey();
-      if (!sFreqMap.containsKey(tMapKey)) {
+  public boolean freqMapEqualsOrMore(Map<Character, Integer> sFreqMap, Map<Character, Integer> tFreqMap) {
+    for (Map.Entry<Character, Integer> entry : tFreqMap.entrySet()) {
+      if (!sFreqMap.containsKey(entry.getKey())) {
         return false;
       }
-      Integer tMapValue = entry.getValue();
-      Integer sMapValue = sFreqMap.get(tMapKey);
-      if (sMapValue < tMapValue) {
+      int sFreq = sFreqMap.get(entry.getKey());
+      int tFreq = entry.getValue();
+      if (sFreq < tFreq) {
         return false;
       }
     }
     return true;
+  }
+  
+  /**
+   * "Optimized" version using hash table
+   * @param s
+   * @param t
+   * @return
+   */
+  public String minWindowHashTable(String s, String t) {
+    int tValidChars=0;
+    int[] tFreqHashTable = new int[128];
+    for (int i=0; i<t.length(); i++) {
+      char c = t.charAt(i);
+      if (tFreqHashTable[c] == 0) {
+        tValidChars += 1;
+      }
+      tFreqHashTable[c] += 1;
+    }
+    
+    int[] sFreqHashTable = new int[128];
+    int sValidChars=0;
+    
+    int slowPointer=0, fastPointer=0;
+    int minWindowLength=Integer.MAX_VALUE, minStart=0, minEnd=0;
+    while (fastPointer < s.length()) {
+      int fastPointerChar = s.charAt(fastPointer);
+      sFreqHashTable[fastPointerChar]+=1;
+      
+      if (tFreqHashTable[fastPointerChar] > 0 && 
+          tFreqHashTable[fastPointerChar] == sFreqHashTable[fastPointerChar]) {
+        sValidChars+=1;
+      }
+      
+      // valid or not - if valid, shrink slowpointer. if not valid, add fastpointer
+      while (tValidChars==sValidChars) {
+        int windowLength = fastPointer - slowPointer +1;
+        if (windowLength < minWindowLength) {
+          minStart = slowPointer; minEnd = fastPointer;
+          minWindowLength = windowLength;
+        }
+        
+        char slowPointerChar = s.charAt(slowPointer);
+        sFreqHashTable[slowPointerChar] -= 1;
+        if (tFreqHashTable[slowPointerChar] > 0 &&
+            sFreqHashTable[slowPointerChar] < tFreqHashTable[slowPointerChar]) {
+          sValidChars-=1;
+        }
+        slowPointer+=1;
+      }
+
+      fastPointer += 1;
+    }
+    
+    if (minWindowLength==Integer.MAX_VALUE) {
+      return "";
+    } else {
+      return s.substring(minStart, minEnd+1);
+    }
   }
 }
