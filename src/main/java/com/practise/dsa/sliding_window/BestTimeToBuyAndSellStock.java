@@ -1,7 +1,5 @@
 package com.practise.dsa.sliding_window;
 
-import java.util.Arrays;
-
 public class BestTimeToBuyAndSellStock {
   
   /**
@@ -12,30 +10,19 @@ public class BestTimeToBuyAndSellStock {
    * @return
    */
   public int maxProfit2Pointers(int[] prices) {
-    int slowPointer=0, fastPointer=1;
-    int maxProfit=0, currentProfit=0;
+    int slowPointer=0, fastPointer=slowPointer+1;
+    int maxProfit=0, profit=0;
     
-    while (fastPointer < prices.length) {
-      System.out.printf("Current iteration slowPointer=%d, fastPointer=%d%n", slowPointer, fastPointer);
-      System.out.printf("slowPointerValue=%d, fastPointerValue=%d%n", prices[slowPointer], prices[fastPointer]);
-      
-      currentProfit = prices[fastPointer] - prices[slowPointer];
-      System.out.printf("currentProfit=%d%n", currentProfit);
-      
-      maxProfit = Math.max(maxProfit, currentProfit);
-      System.out.printf("maxProfit=%d%n", maxProfit);
-      
+    while (fastPointer<prices.length) {
+      profit = prices[fastPointer] - prices[slowPointer];
+      maxProfit = Math.max(maxProfit, profit);
       if (prices[fastPointer] < prices[slowPointer]) {
         slowPointer = fastPointer;
-        fastPointer = slowPointer+1;
-        System.out.printf("fastPointer is < slowPointer. Updating slowPointer=%d, fastPointer=%d%n", slowPointer, fastPointer);
+        fastPointer += 1;
       } else {
         fastPointer += 1;
-        System.out.printf("fastPointer is >= slowPointer. Updating fastPointer=%d%n", fastPointer);
       }
-      
     }
-    
     return maxProfit;
   }
   
@@ -47,33 +34,26 @@ public class BestTimeToBuyAndSellStock {
    * @return
    */
   public int maxProfitLeftAndRightArray(int[] prices) {
-    
-    int[] buyArray = new int[prices.length];
-    int[] sellArray = new int[prices.length];
-    
-    buyArray[0] = prices[0];
-    for (int i=1; i<prices.length;i++) {
-      buyArray[i] = Math.min(buyArray[i-1], prices[i]);
-    }
-    
-    System.out.printf("buyArray=%s%n", Arrays.toString(buyArray));
-    
+    int[] buyArray = new int[prices.length], sellArray = new int[prices.length];
+    buyArray[0] = prices[0]; 
     sellArray[prices.length-1] = prices[prices.length-1];
-    for (int i=prices.length-1-1; i>-1; i--) {
-      sellArray[i] = Math.max(sellArray[i+1], prices[i]);
+    
+    for (int i=1; i<prices.length;i++) {
+      int lowestBuy = Math.min(buyArray[i-1], prices[i]);
+      buyArray[i] = lowestBuy;
     }
     
-    System.out.printf("sellArray=%s%n", Arrays.toString(sellArray));
+    for (int i=prices.length-2; i>=0; i--) {
+      int highestSell = Math.max(sellArray[i+1], prices[i]);
+      sellArray[i] = highestSell;
+    }
     
-    int maxProfit=0;
+    int maxProfit = 0, profit = 0;
     for (int i=0; i<prices.length; i++) {
-      maxProfit = Math.max(maxProfit, sellArray[i] - buyArray[i]);
+      profit = sellArray[i] - buyArray[i];
+      maxProfit = Math.max(maxProfit, profit);
     }
-    
-    System.out.printf("maxProfit=%s%n", maxProfit);
     
     return maxProfit;
-    
   }
-  
 }

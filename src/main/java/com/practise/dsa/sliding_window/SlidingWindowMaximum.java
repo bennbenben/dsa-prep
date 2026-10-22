@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 public class SlidingWindowMaximum {
-
+  
   /**
    * Sliding window, brute force
    * Time complexity: O(N * K), where N is the length of input array nums, and k is the size of window. This is because the iteration is from left to right O(N), and within each window, each element is iterate once O(K)
@@ -52,33 +52,30 @@ public class SlidingWindowMaximum {
    */
   public int[] maxSlidingWindowPriorityQueue(int[] nums, int k) {
     PriorityQueue<int[]> maxHeap = new PriorityQueue<int[]>((a,b) -> b[0]-a[0]);
-    for (int i=0; i<k; i++) {
-      maxHeap.offer(new int[] {nums[i], i});
-    }
+    int slowPointer=0, fastPointer=0;
+    List<Integer> maxWindowValueList = new ArrayList<Integer>();
     
-//    int[] maxWindowArray = new int[nums.length-k+1]; // nums.length-k+1 will return the number of windows
-    List<Integer> maxWindows = new ArrayList<Integer>();
-    
-    int slowPointer=0, fastPointer=k-1;
-    while (fastPointer<nums.length) {
+    while (fastPointer < nums.length) {
       
-      // If index < slowPointer, entry is already out of the window
-      while (maxHeap.peek()[1] < slowPointer) {
+      while (maxHeap.size() > 0 && maxHeap.peek()[1] < slowPointer) {
         maxHeap.poll();
       }
-      maxWindows.add(maxHeap.peek()[0]);
       
-      slowPointer +=1; fastPointer +=1;
-      if (fastPointer < nums.length)
+      if (fastPointer - slowPointer + 1 < k) {
         maxHeap.offer(new int[] {nums[fastPointer], fastPointer});
+        fastPointer+=1;
+      } else {
+        maxHeap.offer(new int[] {nums[fastPointer], fastPointer});
+        maxWindowValueList.add(maxHeap.peek()[0]);
+        fastPointer+=1; slowPointer+=1;
+      }
     }
     
-    int[] maxWindowArray = new int[maxWindows.size()];
-    for (int i=0; i<maxWindows.size(); i++) {
-      maxWindowArray[i] = maxWindows.get(i);
+    int[] maxWindowValueArray = new int[maxWindowValueList.size()];
+    for (int i=0; i<maxWindowValueList.size(); i++) {
+      maxWindowValueArray[i] = maxWindowValueList.get(i);
     }
-    
-    return maxWindowArray;
+    return maxWindowValueArray;
   }
   
   /**
@@ -91,39 +88,33 @@ public class SlidingWindowMaximum {
    */
   public int[] maxSlidingWindowDeque(int[] nums, int k) {
     LinkedList<Integer> windowDeque = new LinkedList<Integer>();
-    
-    List<Integer> maxWindows = new ArrayList<Integer>();
     int slowPointer=0, fastPointer=0;
+    List<Integer> maxWindowValuesList = new ArrayList<Integer>();
     
     while (fastPointer<nums.length) {
-      while ((windowDeque.size()>0) && (windowDeque.peekFirst() < slowPointer)) {
+      while (windowDeque.size()>0 && slowPointer > windowDeque.peekFirst()) {
         windowDeque.pollFirst();
       }
       
-      while ((windowDeque.size()>0) && (nums[fastPointer] > nums[windowDeque.peekLast()])) {
+      while (windowDeque.size()>0 && nums[fastPointer]>nums[windowDeque.peekLast()]) {
         windowDeque.pollLast();
       }
       
-      windowDeque.addLast(fastPointer);
-      
-      if (fastPointer >= k-1) {
-        maxWindows.add(nums[windowDeque.peekFirst()]);
-      }
-      
-      int existingWindowSize = fastPointer - slowPointer + 1;
-      if (existingWindowSize < k) {
-        fastPointer +=1;
-      } else { 
-        slowPointer +=1;
-        fastPointer +=1;
+      windowDeque.offer(fastPointer);
+      int windowLength = fastPointer - slowPointer + 1;
+      if (windowLength < k) {
+        fastPointer += 1;
+      } else {
+        maxWindowValuesList.add(nums[windowDeque.peekFirst()]);
+        slowPointer += 1; fastPointer += 1;
       }
     }
     
-    int[] maxWindowArray = new int[maxWindows.size()];
-    for (int i=0; i<maxWindows.size(); i++) {
-      maxWindowArray[i]=maxWindows.get(i);
+    int[] maxWindowValuesArray = new int[maxWindowValuesList.size()];
+    for (int i=0; i<maxWindowValuesList.size(); i++) {
+      maxWindowValuesArray[i]=maxWindowValuesList.get(i);
     }
-    return maxWindowArray;
+    return maxWindowValuesArray;
   }
   
   public static void main(String[] args) {
