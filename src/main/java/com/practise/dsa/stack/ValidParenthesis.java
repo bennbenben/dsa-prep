@@ -7,20 +7,22 @@ import java.util.Map;
 public class ValidParenthesis {
 
   public boolean isValid(String s) {
-    System.out.printf("input String s=%s%n",s);
-    Map<Character, Character> complementParenthesis = new HashMap<Character, Character>();
-    complementParenthesis.put('(',')');
-    complementParenthesis.put('{','}');
-    complementParenthesis.put('[',']');
-    System.out.printf("complementParenthesis=%s%n", complementParenthesis.toString());
+    Map<Character, Character> complementParenthesisMap = new HashMap<Character, Character>();
+    complementParenthesisMap.put('(', ')');
+    complementParenthesisMap.put('{', '}');
+    complementParenthesisMap.put('[', ']');
     
     LinkedList<Character> parenthesisStack = new LinkedList<Character>();
-    for (char sChar : s.toCharArray()) {
-      System.out.printf("Existing sChar=%s, parenthesisStack=%s%n", sChar, parenthesisStack.toString());
-      if (complementParenthesis.containsKey(sChar)) {
-        parenthesisStack.offerFirst(sChar);
+    for (Character sChar : s.toCharArray()) {
+      if (complementParenthesisMap.containsKey(sChar)) {
+        parenthesisStack.offer(sChar);
       } else {
-        if (parenthesisStack.isEmpty() || !complementParenthesis.get(parenthesisStack.pollFirst()).equals(sChar)) {
+        if (parenthesisStack.isEmpty()) {
+          return false;
+        }
+        Character tailChar = parenthesisStack.pollLast();
+        Character tailComplementChar = complementParenthesisMap.get(tailChar);
+        if (!tailComplementChar.equals(sChar)) {
           return false;
         }
       }

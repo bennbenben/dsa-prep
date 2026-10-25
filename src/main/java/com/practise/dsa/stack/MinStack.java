@@ -4,33 +4,35 @@ import java.util.LinkedList;
 
 public class MinStack {
   
-  private final LinkedList<Integer> stack = new LinkedList<Integer>();
-  private final LinkedList<Integer> periodicMinStack = new LinkedList<Integer>();
+  private LinkedList<Integer> mainStack;
+  private LinkedList<Integer> minStack; 
 
   public MinStack() {
-    
+    this.mainStack = new LinkedList<Integer>();
+    this.minStack = new LinkedList<Integer>();
   }
   
   public void push(int val) {
-    stack.offerFirst(val);
-    if (periodicMinStack.isEmpty()) {
-      this.periodicMinStack.offerFirst(val);
+    this.mainStack.offerLast(val);
+    
+    if (this.minStack.isEmpty()) {
+      this.minStack.offerLast(val);
     } else {
-      this.periodicMinStack.offerFirst(Math.min(val, periodicMinStack.peekFirst()));
+      int smallerVal = Math.min(val, this.minStack.peekLast());
+      this.minStack.offerLast(smallerVal);
     }
   }
-
-
+  
   public void pop() {
-    this.periodicMinStack.pollFirst();
-    this.stack.pollFirst();
+    this.mainStack.pollLast();
+    this.minStack.pollLast();
   }
-
+  
   public int top() {
-    return this.stack.peekFirst();
+    return this.mainStack.peekLast();
   }
-
+  
   public int getMin() {
-    return this.periodicMinStack.peekFirst();
+    return this.minStack.peekLast();
   }
 }

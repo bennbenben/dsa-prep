@@ -9,7 +9,6 @@ public class EvaluateReversePolishNotationTest {
   
   @Test
   void testEvaluateReversePolishNotation() {
-    Assertions.assertEquals(5, evaluateReversePolishNotation.evalRPN1(new String[] {"1","2","+","3","*","4","-"}));
-    Assertions.assertEquals(5, evaluateReversePolishNotation.evalRPN2(new String[] {"1","2","+","3","*","4","-"}));
+    Assertions.assertEquals(5, evaluateReversePolishNotation.evalRPN(new String[] {"1","2","+","3","*","4","-"}));
   }
 }
