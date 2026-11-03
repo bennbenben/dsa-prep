@@ -1,21 +1,19 @@
 package com.practise.dsa.binary_search;
 
 public class BinarySearch {
-
+  
   public int search(int[] nums, int target) {
-    int leftIndex=0, rightIndex = nums.length-1;
+    int left=0, right = nums.length-1;
     
-    while (leftIndex <= rightIndex) {
-      int midIndex = (rightIndex - leftIndex) / 2 + leftIndex;
-      
-      if (nums[midIndex] == target) {
-        return midIndex;
+    while (left <= right) {
+      int mid = left+(right-left)/2;
+      if (nums[mid]==target) {
+        return mid;
       }
-      
-      if (nums[midIndex] < target) {
-        leftIndex = midIndex + 1;
+      if (nums[mid] < target) {
+        left = mid+1;
       } else {
-        rightIndex = midIndex - 1;
+        right = mid-1;
       }
     }
     
