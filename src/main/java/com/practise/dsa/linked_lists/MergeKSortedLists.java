@@ -3,6 +3,7 @@ package com.practise.dsa.linked_lists;
 import java.util.PriorityQueue;
 
 public class MergeKSortedLists {
+  
   public ListNode mergeKListsMinHeap(ListNode[] lists) {
     PriorityQueue<ListNode> mergeKHeap = new PriorityQueue<ListNode>((a,b) -> a.val - b.val);
     for (ListNode node : lists) {
