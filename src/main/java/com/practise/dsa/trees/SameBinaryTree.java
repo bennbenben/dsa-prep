@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class SameBinaryTree {
+  
+  // DFS - Recursive
   public boolean isSameTreeDfsRecursive(TreeNode p, TreeNode q) {
     if (p == null && q == null) { // end of traversal
       return true;
@@ -21,6 +23,7 @@ public class SameBinaryTree {
     return isSameTreeDfsRecursive(p.left, q.left) && isSameTreeDfsRecursive(p.right, q.right);
   }
   
+  // DFS - Iterative
   public boolean isSameTreeDfsIterative(TreeNode p, TreeNode q) {
     Deque<TreeNode[]> treeStack = new LinkedList<TreeNode[]>();
     treeStack.offerFirst(new TreeNode[] {p,q});
@@ -51,6 +54,7 @@ public class SameBinaryTree {
     return true;
   }
   
+  // BFS - Iterative
   public boolean isSameTreeBfsIterative(TreeNode p, TreeNode q) {
     Queue<TreeNode[]> treeStack = new LinkedList<TreeNode[]>();
     treeStack.offer(new TreeNode[] {p,q});
@@ -71,11 +75,11 @@ public class SameBinaryTree {
         return false;
       }
       
-      TreeNode[] childRightNodesArray = new TreeNode[] {nodeP.right, nodeQ.right};
-      treeStack.offer(childRightNodesArray);
-      
       TreeNode[] childLeftNodesArray = new TreeNode[] {nodeP.left, nodeQ.left};
       treeStack.offer(childLeftNodesArray);
+      
+      TreeNode[] childRightNodesArray = new TreeNode[] {nodeP.right, nodeQ.right};
+      treeStack.offer(childRightNodesArray);
     }
     
     return true;

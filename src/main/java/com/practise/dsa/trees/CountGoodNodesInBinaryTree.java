@@ -5,7 +5,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class CountGoodNodesInBinaryTree {
-
+  
+  // DFS - Recusive
+  
   private int countGoodNodes = 0;
   
   public int goodNodesDfsRecursive(TreeNode root) {

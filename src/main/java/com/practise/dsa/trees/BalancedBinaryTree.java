@@ -3,9 +3,49 @@ package com.practise.dsa.trees;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class BalancedBinaryTree {
   
+  public boolean isBalanced(TreeNode root) {
+    if (root == null) {
+      return true;
+    }
+    
+    Deque<TreeNode> stack = new LinkedList<TreeNode>();
+    stack.offerFirst(root);
+    
+    Map<TreeNode, Integer> depthMap = new HashMap<TreeNode, Integer>();
+    depthMap.put(null, 0);
+    
+    while (!stack.isEmpty()) {
+      TreeNode headNode = stack.peekFirst();
+      TreeNode leftChild = headNode.left; TreeNode rightChild = headNode.right;
+      
+      if (depthMap.containsKey(leftChild) && depthMap.containsKey(rightChild)) {
+        headNode = stack.pollFirst();
+        int leftChildHeight = depthMap.get(leftChild); int rightChildHeight = depthMap.get(rightChild);
+        depthMap.put(headNode, 1+Math.max(leftChildHeight, rightChildHeight));
+        
+        if (Math.abs(leftChildHeight - rightChildHeight) > 1) {
+          return false;
+        }
+        
+      } else {
+        if (!depthMap.containsKey(rightChild)) {
+          stack.offerFirst(rightChild);
+        }
+        
+        if (!depthMap.containsKey(leftChild)) {
+          stack.offerFirst(leftChild);
+        }
+      }
+      
+    }
+    return true;
+  }
+  
+  // DFS - Recursive (ON2) version
   public boolean isBalancedDfsRecursive(TreeNode root) {
     if (root == null) {
       return true;
@@ -25,6 +65,7 @@ public class BalancedBinaryTree {
     return 1 + Math.max(this.dfsRecursive(root.left), this.dfsRecursive(root.right));
   }
   
+  // DFS - Recursive O(N) version
   public boolean isBalancedDfsRecursiveOptimized(TreeNode root) {
     if (root == null) {
       return true;
@@ -55,38 +96,39 @@ public class BalancedBinaryTree {
     }
   }
   
+  // DFS - Iterative
   public boolean isBalancedDfsIterative(TreeNode root) {
     if (root == null) {
       return true;
     }
     
-    Deque<TreeNode> treeStack = new LinkedList<TreeNode>();
-    treeStack.offerFirst(root);
-    HashMap<TreeNode, Integer> treeMap = new HashMap<TreeNode, Integer>();
-    treeMap.put(null, 0);
+    Deque<TreeNode> stack = new LinkedList<TreeNode>();
+    stack.offerFirst(root);
     
-    while (!treeStack.isEmpty()) {
-      TreeNode node = treeStack.peekFirst();
+    Map<TreeNode, Integer> depthMap = new HashMap<TreeNode, Integer>();
+    depthMap.put(null, 0);
+    
+    while (!stack.isEmpty()) {
+      TreeNode headNode = stack.peekFirst();
+      TreeNode leftChild = headNode.left; TreeNode rightChild = headNode.right;
       
-      if (treeMap.containsKey(node.left) && treeMap.containsKey(node.right)) {
-        node = treeStack.pollFirst();
-        TreeNode leftChildNode = node.left; int leftChildNodeHeight = treeMap.get(leftChildNode);
-        TreeNode rightChildNode = node.right; int rightChildNodeHeight = treeMap.get(rightChildNode);
+      if (depthMap.containsKey(leftChild) && depthMap.containsKey(rightChild)) {
+        headNode = stack.pollFirst();
+        int leftChildHeight = depthMap.get(leftChild); int rightChildHeight = depthMap.get(rightChild);
+        depthMap.put(headNode, 1+Math.max(leftChildHeight, rightChildHeight));
         
-        if (Math.abs(rightChildNodeHeight-leftChildNodeHeight) > 1) {
+        if (Math.abs(leftChildHeight - rightChildHeight) > 1) {
           return false;
-        } else {
-          treeMap.put(node, 1 + Math.max(leftChildNodeHeight, rightChildNodeHeight));
         }
         
       } else {
-        if (!treeMap.containsKey(node.right)) {
-          treeStack.offerFirst(node.right);
+        if (!depthMap.containsKey(rightChild)) {
+          stack.offerFirst(rightChild);
         }
         
-        if (!treeMap.containsKey(node.left)) {
-          treeStack.offerFirst(node.left);
-        } 
+        if (!depthMap.containsKey(leftChild)) {
+          stack.offerFirst(leftChild);
+        }
       }
     }
     

@@ -1,6 +1,7 @@
 package com.practise.dsa.trees;
 
 public class LowestCommonAncestorInBST {
+
   public TreeNode lowestCommonAncestor1(TreeNode root, TreeNode p, TreeNode q) {
     TreeNode node = root;
     
@@ -18,7 +19,6 @@ public class LowestCommonAncestorInBST {
 
     return null;
   }
-
   
   public TreeNode lowestCommonAncestor2(TreeNode root, TreeNode p, TreeNode q) {
     TreeNode node = root;
@@ -38,8 +38,8 @@ public class LowestCommonAncestorInBST {
           node.val >= q.val && node.val <= p.val) { // by elimination - one of it would be split / exact match
         return node;
       }
-      
     }
+    
     return null;
   }
 }

@@ -1,6 +1,7 @@
 package com.practise.dsa.trees;
 
 public class SubtreeOfAnotherTree {
+  
   private boolean isSameTree(TreeNode p, TreeNode q) { // solution from another question - SameBinaryTree
     if (p == null && q == null) { // end of traversal
       return true;
