@@ -4,8 +4,55 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class SerializeAndDeserializeBinaryTree {
+  
+  // DFS - Recursive, encodes tree to a single string  
+  public String serializeDfsRecursive(TreeNode root) {
+    StringBuilder sb = new StringBuilder();
+    this.serializeDfsRecursiveMethod(root, sb);
+    return sb.toString();
+  }
+  
+  private void serializeDfsRecursiveMethod(TreeNode root, StringBuilder sb) {
+    if (root == null) {
+      sb.append("null");
+      sb.append(",");
+      return;
+    }
+    
+    sb.append(root.val).append(",");
+    this.serializeDfsRecursiveMethod(root.left, sb);
+    this.serializeDfsRecursiveMethod(root.right, sb);
+  }
+  
+  // DFS - Recursive, decode string to Tree  
+  private int deserializeDfsRecursiveIndex = 0;
+  
+  public TreeNode deserializeDfsRecursive(String data) {
+    if (data.equals("null") || data.isEmpty()) {
+      return null;
+    }
+    this.deserializeDfsRecursiveIndex = 0;
+    String[] deserializeString = data.split(",");
+    TreeNode node = this.deserializeDfsRecursiveMethod(deserializeString);
+    return node;
+  }
+  
+  private TreeNode deserializeDfsRecursiveMethod(String[] data) {
+    String currentValue = data[deserializeDfsRecursiveIndex]; 
+    this.deserializeDfsRecursiveIndex += 1;
+    
+    if (!currentValue.equals("null")) {
+      TreeNode node = new TreeNode(Integer.valueOf(currentValue)); 
+      node.left = this.deserializeDfsRecursiveMethod(data);
+      node.right = this.deserializeDfsRecursiveMethod(data);
+      return node;  
+    
+    } else {
+      return null;
+    }
+  }
 
-  // Encodes a tree to a single string.
+  // BFS - Recursive, encodes tree to a single string
   public String serialize(TreeNode root) {
     Queue<TreeNode> serializeQueue = new LinkedList<TreeNode>();
     serializeQueue.offer(root);
@@ -26,7 +73,7 @@ public class SerializeAndDeserializeBinaryTree {
     return sbTree.toString();
   }
 
-  // Decodes your encoded data to tree.
+  // BFS - Iterative, decodes your data to tree
   public TreeNode deserialize(String data) {
     if (data.equals("null,") || data.isEmpty()) {
       return null;
