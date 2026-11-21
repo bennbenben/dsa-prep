@@ -15,7 +15,7 @@ public class BinaryTreeMaximumPathSum {
       return 0;
     }
     
-    int leftSum = Math.max(0, this.dfsRecursive(root.left)); // if a branch is negative, ignore it
+    int leftSum = Math.max(0, this.dfsRecursive(root.left)); // if a branch is negative, clamp to 0
     int rightSum = Math.max(0, this.dfsRecursive(root.right));
     
     int Vmax = root.val + leftSum + rightSum;

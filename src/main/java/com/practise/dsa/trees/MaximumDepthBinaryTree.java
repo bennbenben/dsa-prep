@@ -5,11 +5,15 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class MaximumDepthBinaryTree {
+  
+  // DFS - Recursive
   public int maxDepthRecursiveDfs(TreeNode root) {
     if (root == null) {
       return 0;
     }
-    return 1 + Math.max(maxDepthRecursiveDfs(root.left), maxDepthRecursiveDfs(root.right));
+    
+    int maxEdge = Math.max(maxDepthRecursiveDfs(root.left), maxDepthRecursiveDfs(root.right));
+    return 1 + maxEdge;
   }
   
   public class TreePair {
@@ -21,6 +25,7 @@ public class MaximumDepthBinaryTree {
     }
   }
 
+  // DFS - Iterative
   public int maxDepthIterativeDfs(TreeNode root) {
     if (root == null) {
       return 0;
@@ -73,6 +78,7 @@ public class MaximumDepthBinaryTree {
     return depth;
   }
   
+  // BFS - Iterative (Optimized)
   public int maxDepthIterativeBfsOptimized(TreeNode root) {
     if (root == null) {
       return 0;
@@ -80,11 +86,14 @@ public class MaximumDepthBinaryTree {
     
     Queue<TreeNode> queue = new LinkedList<TreeNode>();
     queue.offer(root);
-    int depth = 0;
+    
+    int maxDepth = 0;
+    int numOfNodesInLevel = 0;
     
     while (!queue.isEmpty()) {
-      int numberOfNodesOnLevel = queue.size();
-      for (int i=0; i<numberOfNodesOnLevel; i++) {
+      maxDepth += 1;
+      numOfNodesInLevel = queue.size();
+      for (int i=0; i<numOfNodesInLevel; i++) {
         TreeNode node = queue.poll();
         if (node.left != null) {
           queue.offer(node.left);
@@ -93,8 +102,8 @@ public class MaximumDepthBinaryTree {
           queue.offer(node.right);
         }
       }
-      depth += 1;
     }
-    return depth;
+    
+    return maxDepth;
   }
 }

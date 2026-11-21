@@ -7,6 +7,24 @@ public class KthSmallestIntegerInBST {
   
   private List<Integer> bstValuesList = new ArrayList<Integer>();
   
+  public int kthSmallest(TreeNode root, int k) {
+    this.bstValuesList.clear();
+    this.dfsTopDown(root);
+    this.bstValuesList.sort((a,b) -> Integer.compare(a, b));
+    return this.bstValuesList.get(k-1);
+  }
+  
+  private void dfsTopDown(TreeNode root) {
+    if (root == null) {
+      return;
+    }
+    
+    this.bstValuesList.add(root.val);
+    this.dfsTopDown(root.left);
+    this.dfsTopDown(root.right);
+  }
+  
+  // DFS - Recursive, pre-order (root, left, right)
   public int kthSmallestPreOrderDfsRecursive(TreeNode root, int k) {
     this.bstValuesList.clear();
     this.preOrderDfsRecursive(root);
@@ -28,6 +46,7 @@ public class KthSmallestIntegerInBST {
     }
   }
   
+  // DFS - Recursive, In-order (left, root, right)
   public int kthSmallestInOrderDfsRecursive(TreeNode root, int k) {
     this.bstValuesList.clear();
     this.inOrderDfsRecursive(root);
@@ -43,22 +62,24 @@ public class KthSmallestIntegerInBST {
     this.inOrderDfsRecursive(root.right);
   }
   
+  // DFS - Recursive, In-order (left, root, right); Optimized
+  private int k;
   private int count;
   private int result;
   public int kthSmallestInOrderDfsRecursiveOptimized(TreeNode root, int k) {
+    this.k = k;
     this.count = 0;
     this.result = -1;
-    this.inOrderDfsRecursiveOptimized(root, k);
+    this.inOrderDfsRecursiveOptimized(root);
     return this.result;
   }
   
-  private void inOrderDfsRecursiveOptimized(TreeNode root, int k) {
+  private void inOrderDfsRecursiveOptimized(TreeNode root) {
     if (root == null) {
       return;
     }
-    this.inOrderDfsRecursiveOptimized(root.left, k);
+    this.inOrderDfsRecursiveOptimized(root.left);
     
-    this.bstValuesList.add(root.val);
     this.count += 1;
     if (this.count == k) {
       this.result = root.val;
@@ -66,7 +87,7 @@ public class KthSmallestIntegerInBST {
     }
     
     if (this.count < k) {
-      this.inOrderDfsRecursiveOptimized(root.right, k);
+      this.inOrderDfsRecursiveOptimized(root.right);
     }
   }
 

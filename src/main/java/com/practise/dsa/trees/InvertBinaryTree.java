@@ -5,20 +5,23 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class InvertBinaryTree {
+  
+  // DFS - Recursive method
   public TreeNode invertTreeRecursiveDfs(TreeNode root) {
     if (root == null) {
       return null;
     }
     
-    TreeNode temp = root.left;
+    TreeNode tempNode = root.left;
     root.left = root.right;
-    root.right = temp;
+    root.right = tempNode;
     
     invertTreeRecursiveDfs(root.left);
     invertTreeRecursiveDfs(root.right);
     return root;
   }
   
+  // DFS - iterative
   public TreeNode invertTreeIterativeDfs(TreeNode root) {
     if (root == null) {
       return null;
@@ -28,24 +31,26 @@ public class InvertBinaryTree {
     stack.offerFirst(root);
     
     while (!stack.isEmpty()) {
-      TreeNode node = stack.pollFirst(); // get the most recently added node
+      TreeNode node = stack.pollFirst();
       
-      TreeNode temp = node.left;
+      TreeNode tempNode = node.left;
       node.left = node.right;
-      node.right = temp;
+      node.right = tempNode;
       
-      if (node.right!=null) {
-        stack.addFirst(node.right);
+      if (node.right != null) { // enqueue the right before left for next iteration
+        stack.offerFirst(node.right);
       }
       
-      if (node.left!=null) {
-        stack.addFirst(node.left);
+      if (node.left != null) {
+        stack.offerFirst(node.left);
       }
+      
     }
     
     return root;
   }
   
+  // BFS - Iterative
   public TreeNode invertTreeIterativeBfs(TreeNode root) {
     if (root == null) {
       return null;
@@ -63,12 +68,12 @@ public class InvertBinaryTree {
       node.right = temp;
       
       // add the children into queue for next iteration
-      if (node.right != null) {
-        queue.offer(node.right);
-      } 
-      
       if (node.left != null) {
         queue.offer(node.left);
+      } 
+      
+      if (node.right != null) {
+        queue.offer(node.right);
       } 
     }
     

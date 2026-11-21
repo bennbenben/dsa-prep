@@ -6,8 +6,10 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class DiameterOfBinaryTree {
+  
   private int maxDiameter = 0;
   
+  // DFS - Recursive
   public int diameterOfBinaryTreeDfsRecursive(TreeNode root) {
     if (root == null) {
       return 0;
@@ -28,36 +30,42 @@ public class DiameterOfBinaryTree {
     return 1 + Math.max(leftDepth, rightDepth);
   }
   
+  // DFS - Iterative
   public int diameterOfBinaryTreeDfsIterative(TreeNode root) {
     if (root == null) {
       return 0;
     }
     
+    int maxDiameter = 0;
+    
     Deque<TreeNode> stack = new LinkedList<TreeNode>();
     stack.offerFirst(root);
-    Map<TreeNode, Integer> nodeMap = new HashMap<TreeNode, Integer>();
+    Map<TreeNode, Integer> depthMap = new HashMap<TreeNode, Integer>();
+    depthMap.put(null, 0);
     
     while (!stack.isEmpty()) {
-      TreeNode node = stack.peek();
-      TreeNode childNodeLeft = node.left;
-      TreeNode childNodeRight = node.right;
+      TreeNode headNode = stack.peekFirst();
       
-      if (nodeMap.containsKey(childNodeLeft) && nodeMap.containsKey(childNodeRight)) {
-        node = stack.pollFirst();
-        int nodeDiameter = 1 + nodeMap.get(childNodeLeft) + nodeMap.get(childNodeRight);
-        nodeMap.put(node, nodeDiameter);
-        this.maxDiameter = Math.max(this.maxDiameter, nodeMap.get(childNodeLeft) + nodeMap.get(childNodeRight));
-      
-      } else {
-        if (!nodeMap.containsKey(childNodeRight)) {
-          stack.offerFirst(childNodeRight);
+      // if both child nodes is already process before
+      if (depthMap.containsKey(headNode.left) && depthMap.containsKey(headNode.right)) {
+        headNode = stack.pollFirst();
+        
+        int vShapedDiameter = depthMap.get(headNode.left) + depthMap.get(headNode.right);
+        maxDiameter = Math.max(maxDiameter, vShapedDiameter);
+        
+        depthMap.put(headNode, 1 + Math.max(depthMap.get(headNode.left), depthMap.get(headNode.right)));
+        
+      } else { // one or more of child nodes not processed before
+        if (!depthMap.containsKey(headNode.right)) {
+          stack.offerFirst(headNode.right);
         }
-        if (!nodeMap.containsKey(childNodeLeft)) {
-          stack.offerFirst(childNodeLeft);
+        
+        if (!depthMap.containsKey(headNode.left)) {
+          stack.offerFirst(headNode.left);
         }
       }
     }
-    
-    return this.maxDiameter;
+
+    return maxDiameter;
   }
 }
