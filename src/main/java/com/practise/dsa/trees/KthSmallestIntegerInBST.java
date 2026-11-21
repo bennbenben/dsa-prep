@@ -7,23 +7,6 @@ public class KthSmallestIntegerInBST {
   
   private List<Integer> bstValuesList = new ArrayList<Integer>();
   
-  public int kthSmallest(TreeNode root, int k) {
-    this.bstValuesList.clear();
-    this.dfsTopDown(root);
-    this.bstValuesList.sort((a,b) -> Integer.compare(a, b));
-    return this.bstValuesList.get(k-1);
-  }
-  
-  private void dfsTopDown(TreeNode root) {
-    if (root == null) {
-      return;
-    }
-    
-    this.bstValuesList.add(root.val);
-    this.dfsTopDown(root.left);
-    this.dfsTopDown(root.right);
-  }
-  
   // DFS - Recursive, pre-order (root, left, right)
   public int kthSmallestPreOrderDfsRecursive(TreeNode root, int k) {
     this.bstValuesList.clear();
